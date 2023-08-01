@@ -1,45 +1,45 @@
 name: Deploy to GitHub Pages
 
-# ¨C¦¸µ{¦¡½XPush¨ìmaster¡A°õ¦æworkflow
+# æ¯æ¬¡ç¨‹å¼ç¢¼Pushåˆ°masterï¼ŒåŸ·è¡Œworkflow 
 on:
   push:
     branches: [master]
 
 jobs:
   deploy-to-github-pages:
-    # ¨Ï¥Îubuntu
+    # ä½¿ç”¨ubuntu
     runs-on: ubuntu-latest
     steps:
-      # ¨Ï¥Îcheckout actions
+      # ä½¿ç”¨checkout actions
       - uses: actions/checkout@v3
 
-      # ¦w¸Ë.NET Core SDK
+      # å®‰è£.NET Core SDK
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # °õ¦æ³æ¤¸´ú¸Õ±M®×
+      # åŸ·è¡Œå–®å…ƒæ¸¬è©¦å°ˆæ¡ˆ
       - name: Run Unit Test
         run: dotnet test --no-build
 
-      # µo§Gµ{¦¡¨ìRelease¸ê®Æ§¨
+      # ç™¼ä½ˆç¨‹å¼åˆ°Releaseè³‡æ–™å¤¾
       - name: Publish .NET Core Project
         run: dotnet publish ${{ env.DOTNET_APP_PUBLISH_PROJECT_PATH }} -c Release -o release --nologo
 
-      # ­×§ïindex.htmlªºbase href -- ±q"/"§ï¬°"/TodoBlazor/"
+      # ä¿®æ”¹index.htmlçš„base href -- å¾"/"æ”¹ç‚º"/TodoBlazor/"
       - name: Change base-tag in index.html from / to TodoBlazor
         run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorApp\/" \/>/g' release/wwwroot/index.html
 
-      # ½Æ»sindex.html¤º®e¨ì404.html
+      # è¤‡è£½index.htmlå…§å®¹åˆ°404.html
       - name: copy index.html to 404.html
         run: cp release/wwwroot/index.html release/wwwroot/404.html
 
-      # ¥[¤J¤@­Ó.nojekyllÀÉ®×
+      # åŠ å…¥ä¸€å€‹.nojekyllæª”æ¡ˆ
       - name: Add .nojekyll file
         run: touch release/wwwroot/.nojekyll
 
-      # ±Nrelease/wwwrootªºµ{¦¡½X¡Apush¨ìgh-pages¤À¤ä
+      # å°‡release/wwwrootçš„ç¨‹å¼ç¢¼ï¼Œpushåˆ°gh-pagesåˆ†æ”¯
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
