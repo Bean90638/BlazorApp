@@ -16,10 +16,6 @@ jobs:
     # 使用ubuntu
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ${{ env.FRONTEND_PUBLISH_Name }} # 全局設定工作目錄為 "Client"
-
     steps:
       # 使用checkout actions
       - uses: actions/checkout@v3
@@ -36,19 +32,22 @@ jobs:
 
       # 發佈程式到Release資料夾
       - name: Publish .NET Core Project
-        # working-directory: Client
+        working-directory: Client
         run: dotnet publish -c Release -o release --nologo
 
       # 修改index.html的base href -- 從"/"改為"/TodoBlazor/"
       - name: Change base-tag in index.html from / to TodoBlazor
+        working-directory: Client
         run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorApp\/" \/>/g' release/wwwroot/index.html
 
       # 複製index.html內容到404.html
       - name: copy index.html to 404.html
+        working-directory: Client
         run: cp release/wwwroot/index.html release/wwwroot/404.html
 
       # 加入一個.nojekyll檔案
       - name: Add .nojekyll file
+        working-directory: Client
         run: touch release/wwwroot/.nojekyll
 
       # 將release/wwwroot的程式碼，push到gh-pages分支
