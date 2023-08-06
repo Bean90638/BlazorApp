@@ -1,6 +1,6 @@
 name: Deploy to GitHub Pages
 
-# ¨C¦¸µ{¦¡½XPush¨ìmaster¡A°õ¦æworkflow
+# ï¿½Cï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½XPushï¿½ï¿½masterï¿½Aï¿½ï¿½ï¿½ï¿½workflow
 on:
   push:
     branches: [master, main]
@@ -9,39 +9,39 @@ on:
 
 jobs:
   deploy-to-github-pages:
-    # ¨Ï¥Îubuntu
+    # ï¿½Ï¥ï¿½ubuntu
     runs-on: ubuntu-latest
     steps:
-      # ¨Ï¥Îcheckout actions
+      # ï¿½Ï¥ï¿½checkout actions
       - uses: actions/checkout@v3
 
-      # ¦w¸Ë.NET Core SDK
+      # ï¿½wï¿½ï¿½.NET Core SDK
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # °õ¦æ³æ¤¸´ú¸Õ±M®×
+      # ï¿½ï¿½ï¿½ï¿½æ¤¸ï¿½ï¿½ï¿½Õ±Mï¿½ï¿½
       - name: Run Unit Test
         run: dotnet test --no-build
 
-      # µo§Gµ{¦¡¨ìRelease¸ê®Æ§¨
+      # ï¿½oï¿½Gï¿½{ï¿½ï¿½ï¿½ï¿½Releaseï¿½ï¿½Æ§ï¿½
       - name: Publish .NET Core Project
         run: dotnet publish ${{ env.DOTNET_APP_PUBLISH_PROJECT_PATH }} -c Release -o release --nologo
 
-      # ­×§ïindex.htmlªºbase href -- ±q"/"§ï¬°"/ºô§}/"
+      # ï¿½×§ï¿½index.htmlï¿½ï¿½base href -- ï¿½q"/"ï¿½ï¬°"/ï¿½ï¿½ï¿½}/"
       - name: Change base-tag in index.html from / to /page/
-        run: sed -i 's/<base href="\/" \/>/<base href="\/Monopoly\/" \/>/g' release/wwwroot/index.html
+        run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorApp\/" \/>/g' release/wwwroot/index.html
 
-      # ½Æ»sindex.html¤º®e¨ì404.html
+      # ï¿½Æ»sindex.htmlï¿½ï¿½ï¿½eï¿½ï¿½404.html
       - name: copy index.html to 404.html
         run: cp release/wwwroot/index.html release/wwwroot/404.html
 
-      # ¥[¤J¤@­Ó.nojekyllÀÉ®×
+      # ï¿½[ï¿½Jï¿½@ï¿½ï¿½.nojekyllï¿½É®ï¿½
       - name: Add .nojekyll file
         run: touch release/wwwroot/.nojekyll
 
-      # ±Nrelease/wwwrootªºµ{¦¡½X¡Apush¨ìgh-pages¤À¤ä
+      # ï¿½Nrelease/wwwrootï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½Xï¿½Apushï¿½ï¿½gh-pagesï¿½ï¿½ï¿½ï¿½
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
