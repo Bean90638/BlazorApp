@@ -3,7 +3,9 @@ name: Deploy to GitHub Pages
 # 每次程式碼Push到master，執行workflow
 on:
   push:
-    branches: [master]
+    branches: [master, main]
+    paths:
+      - "Client/**"
 
 jobs:
   deploy-to-github-pages:
@@ -27,9 +29,9 @@ jobs:
       - name: Publish .NET Core Project
         run: dotnet publish ${{ env.DOTNET_APP_PUBLISH_PROJECT_PATH }} -c Release -o release --nologo
 
-      # 修改index.html的base href -- 從"/"改為"/TodoBlazor/"
-      - name: Change base-tag in index.html from / to TodoBlazor
-        run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorApp\/" \/>/g' release/wwwroot/index.html
+      # 修改index.html的base href -- 從"/"改為"/網址/"
+      - name: Change base-tag in index.html from / to /page/
+        run: sed -i 's/<base href="\/" \/>/<base href="\/Monopoly\/" \/>/g' release/wwwroot/index.html
 
       # 複製index.html內容到404.html
       - name: copy index.html to 404.html
@@ -43,5 +45,5 @@ jobs:
       - name: Commit wwwroot to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          BRANCH: gh-pages
-          FOLDER: release/wwwroot
+          branch: gh-pages
+          folder: release/wwwroot
